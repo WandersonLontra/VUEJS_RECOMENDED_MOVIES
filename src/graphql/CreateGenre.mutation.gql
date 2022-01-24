@@ -1,0 +1,8 @@
+
+mutation createGenres($input: [GenreCreateInput!]!) {
+  createGenres(input: $input) {
+    genres {
+      name
+    }
+  }
+}
