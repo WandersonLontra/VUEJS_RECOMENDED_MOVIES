@@ -19,6 +19,7 @@
                 outlined
                 v-model="name"
                 label="Name"
+                :rules="[() => name.length > 1 || 'Este campo não pode estar vazio!']"
                 required
             />
              <v-text-field 
@@ -26,6 +27,7 @@
                 v-model="imageUrl"
                 label="Image URL"
                 placeholder="http://"
+                :rules="[() => imageUrl.length > 1 || 'Este campo não pode estar vazio!']"
                 required
             />
 
@@ -41,13 +43,27 @@
                 v-if="actedIn" 
                 outlined
                 v-model="role"
+                :rules="inputRule"
                 label="Role"
                 required
+            />
+            <v-select
+                v-if="moviesAmount[0]" 
+                outlined
+                v-model="moviesAmount"
+                :items="moviesAmount"
+                label="Movies Selected"
+                color="primary"
+                chips
+                multiple
+                persistent-hint
             />
             <v-text-field
                 outlined
                 v-model="movieName"
                 label="Movie Name"
+                append-icon="mdi-plus-box-multiple"
+                @click:append="addMovie"
                 required
             />                       
 
@@ -62,7 +78,6 @@
                 Enviar    
             </v-btn>            
         </v-form>
-        <div>{{ !!movies[0] }}</div>
    </v-container>
 </template>
 <script>
@@ -71,7 +86,6 @@
 
     const UUID = uuidv4();
     
-
     export default {
        data(){
            return{
@@ -81,10 +95,11 @@
                directed: false,
                role: '',
                movieName: '',
+               moviesAmount: [],
                snackbarColor: '',
                snackbarText: '',
                snackbarIcon: '',
-               snackbar: false
+               snackbar: false,
            }
        },
        apollo: {
@@ -106,9 +121,7 @@
            }
        },
        methods: {
-           async submitPerson(event){
-                event.preventDefault();
-
+            addMovie(){
                 if(!this.movies[0]){
                     this.snackbarColor = 'warning';
                     this.snackbarText = 'Este filme não está cadastrado!';
@@ -117,6 +130,31 @@
 
                     return
                 }
+
+                if(this.moviesAmount.includes(this.movieName)){
+                    this.snackbarColor = 'warning';
+                    this.snackbarText = 'Filme já selecionado!';
+                    this.snackbarIcon = 'mdi-alert-circle';
+                    this.snackbar = true;
+
+                    return
+                }
+
+                this.moviesAmount.push(this.movieName);
+
+                this.movieName = '';
+           },
+           async submitPerson(event){
+                event.preventDefault();
+
+                const validateForm = await this.$refs.createPersonForm.validate();
+
+                if(!validateForm) return;
+
+                const moviesList = this.moviesAmount.reduce((acc,sum) => {
+                    acc.push({title: sum})
+                    return acc
+                },[])
 
                 let variables = {
                     input: [{
@@ -136,7 +174,7 @@
                                 connect: [{
                                     where: {
                                         node: {
-                                            OR: [{title: this.movieName}]
+                                            OR: moviesList
                                         }
                                     },
                                     edge: {
@@ -157,7 +195,7 @@
                                 connect: [{
                                     where: {
                                         node: {
-                                            OR: [{title : this.movieName}]
+                                            OR: moviesList
                                         }
                                     }
                                 }]
@@ -174,7 +212,7 @@
                                 connect: [{
                                     where: {
                                         node: {
-                                            OR: [{title: this.movieName}]
+                                            OR: moviesList
                                         }
                                     },
                                     edge: {
@@ -187,7 +225,7 @@
                                 connect: [{
                                     where: {
                                         node: {
-                                            OR: [{title : this.movieName}]
+                                            OR: moviesList
                                         }
                                     }
                                 }]
@@ -207,9 +245,6 @@
                 this.snackbar = result.data.createPeople.people[0].name === this.name;
 
                 if(this.snackbar) this.$refs.createPersonForm.reset();
-
-
-                console.log(result.data)
             }
        }
     }

@@ -84,7 +84,7 @@
                imdbRating: null,
                imageUrl: '',
                plot: '',
-               genresSelected:[''],
+               genresSelected:[],
                genresList: null,
                snackbar: false
            }
