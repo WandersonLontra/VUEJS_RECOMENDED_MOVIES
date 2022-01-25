@@ -12,7 +12,8 @@
                 {{ snackbarIcon }}
             </v-icon>
         </v-snackbar>
-        <v-form ref="createGenreForm" @submit="submitGenres" class="">
+
+        <v-form ref="createGenreForm" @submit="submitGenres">
             <h1>Create Genre</h1>
             <v-text-field 
                 outlined
@@ -35,13 +36,6 @@
    </v-container>
 </template>
 <script>
-    import { v4 as uuidv4 } from 'uuid';
-
-
-    const UUID = uuidv4();
-
-    UUID
-
     export default {
        data(){
            return{
