@@ -81,7 +81,7 @@
    </v-container>
 </template>
 <script>
-    import gql from 'graphql-tag'
+    import gql from 'graphql-tag';
     import { v4 as uuidv4 } from 'uuid';
 
     const UUID = uuidv4();
