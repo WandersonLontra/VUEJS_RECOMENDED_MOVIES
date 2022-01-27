@@ -23,92 +23,9 @@ query Movies($where: MovieWhere, $ratedByUserWhere2: UserWhere, $ratedConnection
       name
       ratedConnection(where: $ratedConnectionWhere2) {
         edges {
-          movieTitle
           rating
         }
       }
     }
   }
 }
-
-# <template>
-#   <div id="app">
-#     <div id="nav">
-#       <router-link to="/">Home</router-link> |
-#       <router-link to="/about">About</router-link>
-
-#       <input type="text" v-model="movieId" />
-
-#       <div
-#         v-if="$apollo.queries.movies.loading"
-#       >Loading</div>
-#       <div
-#         v-else 
-#         v-for="(movie,i) in movies"
-#         :key="i"
-#       >
-#         <ul>
-#           <li>{{ movie.title }}</li>
-#           <li v-for="(genre,i) in movie.genres" :key="`genre-${i}`">{{ genre.name }}</li>
-#         </ul>
-#       </div>
-#       <!-- <ApolloQuery
-#         :query="require('./graphql/Movies.query.gql')"
-#       >
-#         <template slot-scope="{result: {data}}">
-#           <div>{{ data }}</div>
-#         </template>
-
-#       </ApolloQuery> -->
-#     </div>
-#     <router-view/>
-#   </div>
-# </template>
-
-# <script>
-#   // import gql from 'graphql-tag';
-#   import MoviesQuery from './graphql/Movies.query.gql';
-
-#   export default {
-#     data: () => ({
-#       movies: null,
-#       movieId: '',
-#     }),
-#     apollo: {
-#       movies: {
-#         query: MoviesQuery,
-#         variables(){
-#           return{
-#             where: {
-#               _id: this.movieId
-#             }
-#           }
-#         }
-
-#       }
-#     }
-#   }
-# </script>
-
-# <style lang="scss">
-# #app {
-#   font-family: Avenir, Helvetica, Arial, sans-serif;
-#   -webkit-font-smoothing: antialiased;
-#   -moz-osx-font-smoothing: grayscale;
-#   text-align: center;
-#   color: #2c3e50;
-# }
-
-# #nav {
-#   padding: 30px;
-
-#   a {
-#     font-weight: bold;
-#     color: #2c3e50;
-
-#     &.router-link-exact-active {
-#       color: #42b983;
-#     }
-#   }
-# }
-# </style>

@@ -21,7 +21,7 @@
         cols="12"  
         lg="6"
       >
-        <v-card-title class="text-h4 font-weight-bold">{{ movies[0].title }}</v-card-title>
+        <h1 class="text-h4 font-weight-bold">{{ movies[0].title }}</h1>
         <v-card-subtitle 
           class="text-subtitle-1 grey--text text--darken-1"
         >
@@ -78,17 +78,32 @@
         />             
       </v-col>
     </v-row>
+    </v-card>
 
+    <v-card
+      class="mx-auto mt-9 pa-4"
+      max-width="1024"
+      elevation="0"
+      tile    
+    >
+      <v-row>
+        <h1>Similar Movies</h1>
+        <RecommendedMovies
+          :movie_group="movies[0].similarMovies"
+        />
+      </v-row>
     </v-card>
   </v-container>
 </template>
 
 <script>
 import DescriptionSession from '../components/DescriptionSession';
+import RecommendedMovies from '../components/RecommendedMovies';
 
 export default {
   components:{
-    DescriptionSession
+    DescriptionSession,
+    RecommendedMovies
   },
   data(){
     return {
