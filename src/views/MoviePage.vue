@@ -1,9 +1,132 @@
 <template>
-  <div>{{ $route.params.title}}</div>
+  <v-container class="mt-9">
+    {{title}}
+    <v-card
+      class="mx-auto pa-4"
+      max-width="1024"
+    >
+    <v-row
+      align="center"
+    >
+      <v-col 
+        cols="12"  
+        lg="6"
+        align="center"
+      >
+        <v-img :src="movies[0].imageUrl" max-width="500"/>
+      </v-col>
+
+      <v-col
+        justify="end"
+        cols="12"  
+        lg="6"
+      >
+        <v-card-title class="text-h4 font-weight-bold">{{ movies[0].title }}</v-card-title>
+        <v-card-subtitle 
+          class="text-subtitle-1 grey--text text--darken-1"
+        >
+          {{ `${movies[0].year} / imdb ${movies[0].imdbRating}` }}
+        </v-card-subtitle>
+
+        <v-card-text class="mb-2" v-if="movies[0].ratedByUser.length > 0">
+          <v-row
+            align="center"
+            class="mx-0 mt-1"
+          >
+            <v-rating
+              v-model="editRate"
+              color="amber"
+              hover
+              dense
+              half-increments
+              length="10"
+              size="30"
+              @input="changeMovieRate"
+            />
+            <div class="grey--text ms-4">
+              {{ editRate }}
+            </div>
+
+          </v-row>
+        </v-card-text>
+
+        <v-divider/>
+
+        <v-card-text class="text-subtitle-1 grey--text text--darken-3 font-weight-medium">
+          {{ movies[0].plot }}
+        </v-card-text>
+
+        <v-divider />
+
+        <DescriptionSession
+          session_name="Genres"
+          :descriptions="movies[0].genres"
+        /> 
+
+        <v-divider />
+
+        <DescriptionSession
+          session_name="Actors"
+          :descriptions="movies[0].actors"
+        />
+
+        <v-divider />
+
+        <DescriptionSession
+          session_name="Directed by"
+          :descriptions="movies[0].director"
+        />             
+      </v-col>
+    </v-row>
+
+    </v-card>
+  </v-container>
 </template>
 
 <script>
-export default {
+import DescriptionSession from '../components/DescriptionSession';
 
-}
+export default {
+  components:{
+    DescriptionSession
+  },
+  data(){
+    return {
+      editRate: null,
+    }
+  },
+  apollo: {
+      movies: {
+          query: require('../graphql/Movies.query.gql'),
+          variables(){
+              var title = this.$route.params.title.replace(/&amp;/g, '&');
+              return {
+                  where: {
+                      title
+                  },
+                  ratedByUserWhere2: {
+                    _id: 1
+                  },
+                  ratedConnectionWhere2: {
+                    node: {
+                      title
+                    }
+                  }
+              }
+          }
+      }
+    },
+    watch: {
+      movies(){
+        console.log(this.movies)
+        this.editRate = this.movies[0].ratedByUser[0]?.ratedConnection.edges[0].rating
+      }
+    },
+    methods: {
+      changeMovieRate(value){
+        console.log(value)
+        //Realizar Mutation de update
+      }
+    }  
+  }
 </script>
