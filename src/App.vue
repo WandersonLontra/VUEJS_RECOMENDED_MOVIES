@@ -20,7 +20,6 @@
 
         <v-autocomplete
           v-model="select"
-          :loading="isLoading"
           :items="items"
           :search-input.sync="search"
           cache-items
@@ -62,7 +61,6 @@
       select: null,
       search: null,
       items: [],
-      isLoading: false,
     }),
     apollo: {
       movies: {
@@ -81,11 +79,14 @@
           acc.push(sum.title)
           return acc
         },[])
+      },
+      $route(){
+        this.select = null
       }
     },
     methods: {
       movieClicked(event){
-        this.$router.push({name: "MoviePage", params: {title: `${event.target.innerHTML}`}});
+        this.$router.push({name: "MoviePage", params: {title: `${event.target.innerHTML}`}}).catch(() => {});
       }
     }
   }

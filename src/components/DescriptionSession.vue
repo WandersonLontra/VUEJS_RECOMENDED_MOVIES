@@ -4,9 +4,9 @@
 
     <v-chip-group column>
       <v-chip
-        v-for="description in descriptions"
-        :key="description.name"
-        class="primary lighten-2  white--text"
+        v-for="(description,i) in descriptions"
+        :key="description.name+i"
+        class="primary lighten-1  white--text"
       >
         {{ description.name }}
       </v-chip>
@@ -21,10 +21,6 @@
       descriptions: [],
       session_name: String,
       
-    },
-
-    data: () => ({
-     
-    }),
+    }
   }
 </script>

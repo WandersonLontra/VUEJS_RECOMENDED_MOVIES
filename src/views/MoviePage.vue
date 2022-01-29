@@ -1,6 +1,5 @@
 <template>
   <v-container class="mt-9">
-    {{title}}
     <v-card
       class="mx-auto pa-4"
       max-width="1024"
@@ -17,7 +16,7 @@
       </v-col>
 
       <v-col
-        justify="end"
+        align-self="start"
         cols="12"  
         lg="6"
       >
@@ -52,7 +51,7 @@
 
         <v-divider/>
 
-        <v-card-text class="text-subtitle-1 grey--text text--darken-3 font-weight-medium">
+        <v-card-text class="text-subtitle-1 grey--text font-weight-medium">
           {{ movies[0].plot }}
         </v-card-text>
 
@@ -83,15 +82,11 @@
     <v-card
       class="mx-auto mt-9 pa-4"
       max-width="1024"
-      elevation="0"
-      tile    
     >
-      <v-row>
-        <h1>Similar Movies</h1>
-        <RecommendedMovies
-          :movie_group="movies[0].similarMovies"
-        />
-      </v-row>
+      <h1>Similar Movies</h1>
+      <RecommendedMovies
+        :movie_group="movies[0].similarMovies"
+      />
     </v-card>
   </v-container>
 </template>
@@ -114,7 +109,7 @@ export default {
       movies: {
           query: require('../graphql/Movies.query.gql'),
           variables(){
-              var title = this.$route.params.title.replace(/&amp;/g, '&');
+              let title = this.$route.params.title.replace(/&amp;/g, '&');
               return {
                   where: {
                       title
@@ -133,7 +128,6 @@ export default {
     },
     watch: {
       movies(){
-        console.log(this.movies)
         this.editRate = this.movies[0].ratedByUser[0]?.ratedConnection.edges[0].rating
       }
     },
