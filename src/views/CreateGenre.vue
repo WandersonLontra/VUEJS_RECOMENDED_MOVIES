@@ -77,7 +77,7 @@
 
 
                     this.snackbarColor = 'success';
-                    this.snackbarText = 'Cadastrado com sucesso!';
+                    this.snackbarText = 'Created with success!';
                     this.snackbarIcon = 'mdi-checkbox-marked-circle';
                     this.snackbar = result.data.createGenres.genres[0].name === this.name;
 
@@ -88,7 +88,7 @@
 
                 } else {
                     this.snackbarColor = 'warning';
-                    this.snackbarText = 'Este gênero já está listado!';
+                    this.snackbarText = 'This genre has already been created!';
                     this.snackbarIcon = 'mdi-alert-circle';
                     this.snackbar = true;
                 }

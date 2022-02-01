@@ -1,0 +1,15 @@
+query userQueries($where: UserWhere) {
+  users(where: $where) {
+    name
+    recommendedMovies {
+      title
+      imdbRating
+      imageUrl
+    }
+    recommendedByGenres {
+      title
+      imdbRating
+      imageUrl
+    }
+  }
+}

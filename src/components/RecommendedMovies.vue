@@ -18,6 +18,7 @@
                         class="ma-2 d-flex flex-column movie_texts"                    
                         width="220"
                         @click="movieClicked(movie.title)"
+                        rounded="lg"
                     >
                         <v-img 
                             :src="movie.imageUrl" 

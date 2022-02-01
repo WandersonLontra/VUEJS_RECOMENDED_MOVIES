@@ -39,7 +39,7 @@
 
         <v-spacer />
 
-        <v-btn> DWAD</v-btn>
+        <v-btn @click="$router.push('/home')">Home</v-btn>
       </v-container>
     </v-app-bar>
 
@@ -57,7 +57,6 @@
     name: 'App',
 
     data: () => ({
-      //
       select: null,
       search: null,
       items: [],

@@ -3,6 +3,7 @@
     <v-card
       class="mx-auto pa-4"
       max-width="1024"
+      rounded="lg"
     >
     <v-row
       align="center"
@@ -27,7 +28,7 @@
           {{ `${movies[0].year} / imdb ${movies[0].imdbRating}` }}
         </v-card-subtitle>
 
-        <v-card-text class="mb-2" v-if="movies[0].ratedByUser.length > 0">
+        <v-card-text class="mb-2">
           <v-row
             align="center"
             class="mx-0 mt-1"
@@ -39,13 +40,12 @@
               dense
               half-increments
               length="10"
-              size="30"
+              size="27"
               @input="changeMovieRate"
             />
             <div class="grey--text ms-4">
               {{ editRate }}
             </div>
-
           </v-row>
         </v-card-text>
 
@@ -82,6 +82,7 @@
     <v-card
       class="mx-auto mt-9 pa-4"
       max-width="1024"
+      rounded="lg"
     >
       <h1>Similar Movies</h1>
       <RecommendedMovies
@@ -94,6 +95,8 @@
 <script>
 import DescriptionSession from '../components/DescriptionSession';
 import RecommendedMovies from '../components/RecommendedMovies';
+import gql from 'graphql-tag';
+
 
 export default {
   components:{
@@ -102,7 +105,12 @@ export default {
   },
   data(){
     return {
-      editRate: null,
+      editRate: 0,
+    }
+  },
+  beforeMount(){
+    if(!this.userData){
+      this.$router.push('/')
     }
   },
   apollo: {
@@ -115,7 +123,7 @@ export default {
                       title
                   },
                   ratedByUserWhere2: {
-                    _id: 1
+                    _id: this.userData.id
                   },
                   ratedConnectionWhere2: {
                     node: {
@@ -128,13 +136,66 @@ export default {
     },
     watch: {
       movies(){
-        this.editRate = this.movies[0].ratedByUser[0]?.ratedConnection.edges[0].rating
+        this.editRate = this.movies[0].ratedByUser[0]?.ratedConnection.edges[0].rating || 0;
       }
     },
     methods: {
-      changeMovieRate(value){
+      async changeMovieRate(value){
         console.log(value)
-        //Realizar Mutation de update
+        
+        const result = await this.$apollo.mutate({
+          mutation: gql`
+            mutation UpdateMovieRateUsers($where: UserWhere, $update: UserUpdateInput, $ratedConnectionWhere2: UserRatedConnectionWhere) {
+              updateUsers(where: $where, update: $update) {
+                users {
+                  ratedConnection(where: $ratedConnectionWhere2) {
+                    edges {
+                      rating
+                      movieTitle
+                    }
+                  }
+                }
+              }
+            }
+          `,
+          variables: {
+            where: {
+              name: this.userData.name,
+            },
+            update: {
+              rated: [
+                {
+                  connect: [
+                    {
+                      where:{
+                        node: {
+                          title: this.$route.params.title.replace(/&amp;/g, '&')
+                        }
+                      },
+                      edge: {
+                        movieTitle: this.$route.params.title.replace(/&amp;/g, '&'),
+                        rating: value
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            ratedConnectionWhere2: {
+              edge: {
+                movieTitle: this.$route.params.title.replace(/&amp;/g, '&')
+              }
+            }
+          }
+        });
+
+        this.editRate = result.data.updateUsers.users[0]?.ratedConnection.edges[0].rating
+
+      }
+    },
+    computed:{
+      userData(){
+        return JSON.parse(localStorage.getItem('@MovieFy_userData'))
       }
     }  
   }
