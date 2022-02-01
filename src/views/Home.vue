@@ -1,6 +1,36 @@
 <template>
-  <v-container>
-    <h1 class="display-2 mt-9"> Welcome {{ users[0].name }}</h1>
+  <v-container  class="mt-9">
+    <v-row align="center">
+      <h1 class="display-1"> Welcome {{ users[0].name }}</h1>
+
+      <v-spacer />
+
+      <v-dialog
+        v-model="editLikedGenres"
+        width="600"
+      >
+        <template v-slot:activator="{on,attrs}">
+          <v-btn
+            color="red lighten-2"
+            v-bind="attrs"
+            v-on="on"
+          >
+            Edit your favorite genres
+          </v-btn>
+        </template> 
+
+        <v-card
+
+        >
+          <RegisterUser 
+              :userName="this.userData.name"
+              :isUpdating="true"
+              :genresSelected="this.likedGenresList"
+              @closeDialog="closeDialogModal"
+          />
+        </v-card>
+      </v-dialog>
+    </v-row>
 
     <v-card
       class="mx-auto mt-9 pa-4"
@@ -34,18 +64,23 @@
         :movie_group="[]"
       />
     </v-card>
+
   </v-container>
 </template>
 
 <script>
   import RecommendedMovies from '../components/RecommendedMovies';
+  import RegisterUser from '../components/RegisterUser.vue';
+
 
   export default {
     name: 'Home',
-    components:{RecommendedMovies},
+    components:{RecommendedMovies, RegisterUser},
     data(){
       return{
-        
+        users: [],
+        editLikedGenres: false,
+        likedGenresList: []
       }
     },
     beforeMount(){
@@ -62,8 +97,23 @@
               name: this.userData.name,
             }
           }
-        }
+        },
+        fetchPolicy: 'cache-and-network'
       },
+    },
+    watch:{
+      users(value){
+        this.likedGenresList = value[0].liked_genres.reduce((acc,sum)=>{
+          acc.push(sum.name)
+          return acc
+        },[])
+      }
+    },
+    methods:{
+      closeDialogModal(){
+        this.editLikedGenres = false;
+        console.log(this.editLikedGenres)
+      }
     },
     computed:{
       userData(){

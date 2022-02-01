@@ -11,5 +11,8 @@ query userQueries($where: UserWhere) {
       imdbRating
       imageUrl
     }
+    liked_genres {
+      name
+    }
   }
 }

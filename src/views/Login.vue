@@ -6,27 +6,34 @@
         rounded="lg"
         :loading="$apollo.loading"
     >
-        <v-card-title >
-            <h1 class="display-1 my-5 pl-5">Login</h1>
-        </v-card-title>
-        <v-card-tex>
-            <v-form  class="px-7">
-                <v-text-field
-                    v-model="userName"
-                    clearable
-                    outlined
-                    
-                    name="name"
-                    label="Username"
-                    append-icon="mdi-account"
-                />                
-            </v-form>
-        </v-card-tex>
-        <v-card-actions class="px-7 pb-7">
-          <v-btn color="success" @click="signUpAction" :loading="$apollo.queries.users.loading">Sign Up</v-btn>
-          <v-spacer/>
-          <v-btn color="info" @click="loginAction" :loading="$apollo.queries.users.loading">Login</v-btn>   
-        </v-card-actions>
+        <v-container v-if="!signUpIsSelected">
+            <v-card-title >
+                <h1 class="display-1 my-5 pl-5">Login</h1>
+            </v-card-title>
+            <v-card-tex>
+                <v-form  class="px-7">
+                    <v-text-field
+                        v-model="userName"
+                        clearable
+                        outlined
+                        name="name"
+                        label="Username"
+                        append-icon="mdi-account"
+                    />                
+                </v-form>
+            </v-card-tex>
+            <v-card-actions class="px-7 pb-7">
+            <v-btn color="success" @click="signUpAction" :loading="$apollo.queries.users.loading">Sign Up</v-btn>
+            <v-spacer/>
+            <v-btn color="info" @click="loginAction" :loading="$apollo.queries.users.loading">Login</v-btn>   
+            </v-card-actions>
+        </v-container>
+
+        <RegisterUser 
+            v-if="signUpIsSelected"
+            :userName="userName"
+            :isUpdating="false"
+        />
     </v-card>
 
     <v-snackbar
@@ -48,11 +55,12 @@
 
 <script>
     import gql from 'graphql-tag';
-    import { v4 as uuidv4 } from 'uuid';
-
-    uuidv4
+    import RegisterUser from '../components/RegisterUser.vue';
     export default {
         name: 'LoginPage',
+        components: {
+            RegisterUser
+        },
         data(){
             return {
                 users: [],
@@ -62,7 +70,8 @@
                 snackbarColor: '',
                 snackbarText: '',
                 snackbarIcon: '',
-                snackbar: false
+                snackbar: false,
+                signUpIsSelected: false
             }
         },
         apollo: {
@@ -103,6 +112,8 @@
                     this.isExist = false;
 
                     return
+                } else if (this.userName !== ''){
+                    this.signUpIsSelected = true
                 }
             },
             async loginAction(){
@@ -116,6 +127,15 @@
                     await localStorage.setItem('@MovieFy_userData',JSON.stringify(userData));
 
                     this.$router.push('/home').catch(() => {});
+
+                    this.isExist = false;
+
+                    return
+                } else {
+                    this.snackbarColor = 'error';
+                    this.snackbarText= 'Username not found!'
+                    this.snackbarIcon = 'mdi-close-circle';
+                    this.snackbar = true;
 
                     this.isExist = false;
 

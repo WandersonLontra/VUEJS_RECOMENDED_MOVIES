@@ -1,42 +1,42 @@
 <template>
-        <v-sheet
-            class="mx-auto my-4"
-            max-width="1024"
+    <v-sheet
+        class="mx-auto my-4"
+        max-width="1024"
+    >
+        <v-slide-group
+            active-class="warning"
+            class="pa-2"
+            show-arrows
         >
-            <v-slide-group
-                active-class="warning"
-                class="pa-2"
-                show-arrows
+            <v-slide-item
+                v-for="(movie,i) in movie_group"
+                :key="`movie-${i}`"
+                v-slot="{ active }"
             >
-                <v-slide-item
-                    v-for="(movie,i) in movie_group"
-                    :key="`movie-${i}`"
-                    v-slot="{ active }"
+                <v-card
+                    :color="active ? undefined : 'primary lighten-1'"
+                    class="ma-2 d-flex flex-column movie_texts"                    
+                    width="220"
+                    @click="movieClicked(movie.title)"
+                    rounded="lg"
                 >
-                    <v-card
-                        :color="active ? undefined : 'primary lighten-1'"
-                        class="ma-2 d-flex flex-column movie_texts"                    
-                        width="220"
-                        @click="movieClicked(movie.title)"
-                        rounded="lg"
-                    >
-                        <v-img 
-                            :src="movie.imageUrl" 
-                            max-height="200"
-                            position=" center top"
-                        />
-                        <v-card-text class="px-2 pt-3">
-                            <h3
-                                class="text-subtitle-2 white--text font-weight-medium mb-5"
-                            >
-                                {{ movie.title }}
-                            </h3>
-                            <span>imdb {{ movie.imdbRating }}</span>
-                        </v-card-text>
-                    </v-card>
-                </v-slide-item>
-            </v-slide-group>
-        </v-sheet>
+                    <v-img 
+                        :src="movie.imageUrl" 
+                        max-height="200"
+                        position=" center top"
+                    />
+                    <v-card-text class="px-2 pt-3">
+                        <h3
+                            class="text-subtitle-2 white--text font-weight-medium mb-5"
+                        >
+                            {{ movie.title }}
+                        </h3>
+                        <span>imdb {{ movie.imdbRating }}</span>
+                    </v-card-text>
+                </v-card>
+            </v-slide-item>
+        </v-slide-group>
+    </v-sheet>
 
 </template>
 

@@ -112,6 +112,7 @@ export default {
     if(!this.userData){
       this.$router.push('/')
     }
+    this.$apollo.queries.movies.refresh()
   },
   apollo: {
       movies: {
@@ -131,7 +132,8 @@ export default {
                     }
                   }
               }
-          }
+          },
+          fetchPolicy: 'cache-and-network'
       }
     },
     watch: {
