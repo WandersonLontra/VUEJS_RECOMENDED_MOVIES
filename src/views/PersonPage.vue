@@ -13,7 +13,7 @@
         lg="6"
         align="center"
       >
-        <!-- <v-img :src="movies[0].imageUrl" max-width="500"/> -->
+        <v-img :src="people[0].imageUrl" max-width="500"/>
       </v-col>
 
       <v-col
@@ -21,40 +21,25 @@
         cols="12"  
         lg="6"
       >
-        <h1 class="text-h4 font-weight-bold">{{ personName }}</h1>
-        <v-card-subtitle 
-          class="text-subtitle-1 grey--text text--darken-1"
-        >
-          <!-- {{ `${movies[0].year} / imdb ${movies[0].imdbRating}` }} -->
-        </v-card-subtitle>
-
-        <v-divider/>
-
-        <v-card-text class="text-subtitle-1 grey--text font-weight-medium">
-          <!-- {{ movies[0].plot }} -->
-        </v-card-text>
+        <h1 class="text-h4 font-weight-bold mb-7">{{ people[0].name }}</h1>
 
         <v-divider />
-<!-- 
+
         <DescriptionSession
-          session_name="Genres"
-          :descriptions="movies[0].genres"
+          v-if="people[0].acted_inConnection.edges.length > 0"
+          session_name="Acted In"
+          :descriptions="people[0].acted_inConnection.edges"
+          hasMovie
         /> 
 
-        <v-divider />
+        <v-divider v-if="people[0].directed.length > 0"/>
 
         <DescriptionSession
-          session_name="Actors"
-          :descriptions="movies[0].actors"
-          isPerson
+          v-if="people[0].directed.length > 0"
+          session_name="Directed"
+          :descriptions="people[0].directed"
+          isDirector
         />
-
-        <v-divider />
--->
-        <DescriptionSession
-
-        />  
-
       </v-col>
     </v-row>
     </v-card>
@@ -65,13 +50,30 @@
     import DescriptionSession from '../components/DescriptionSession';
 
     export default {
-        name: 'PersonPage',
-        components: {DescriptionSession},
-        data(){
+      name: 'PersonPage',
+      components: {DescriptionSession},
+      data(){
+          return{
+            personName: this.$route.params.name.replace(/&amp;/g, '&')
+          }
+      },
+      apollo: {
+        people: {
+          query: require('../graphql/People.query.gql'),
+          variables(){
             return{
-                personName: this.$route.params.name.replace(/&amp;/g, '&')
+              where: {
+                name: this.personName
+              }
             }
+          }
         }
+      },
+      watch: {
+        people(person){
+          console.log({person})
+        }
+      }
     }
 </script>
 

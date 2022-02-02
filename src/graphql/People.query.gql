@@ -1,0 +1,18 @@
+query People($where: PersonWhere) {
+  people(where: $where) {
+    _id
+    name
+    imageUrl
+    acted_inConnection {
+      edges {
+        role
+        node {
+          title
+        }
+      }
+    }
+    directed {
+      title
+    }
+  }
+}

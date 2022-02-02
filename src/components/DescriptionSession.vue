@@ -13,6 +13,28 @@
       </v-chip>
     </v-chip-group>
 
+    <v-chip-group column v-else-if="hasMovie">
+      <v-chip
+        v-for="(description,i) in descriptions"
+        :key="i"
+        class="primary lighten-1  white--text"
+        @click="$router.push(`/movie/${description.node.title}`)"
+      >
+        {{`${description.node.title } as ${description.role }`}}
+      </v-chip>
+    </v-chip-group>
+
+    <v-chip-group column v-else-if="isDirector">
+      <v-chip
+        v-for="(description,i) in descriptions"
+        :key="i"
+        class="primary lighten-1  white--text"
+        @click="$router.push(`/movie/${description.title}`)"
+      >
+        {{ description.title }}
+      </v-chip>
+    </v-chip-group>
+
     <v-chip-group column v-else>
       <v-chip
         v-for="(description,i) in descriptions"
@@ -33,6 +55,8 @@
       descriptions: [],
       session_name: String,
       isPerson: Boolean,
+      hasMovie: Boolean,
+      isDirector: Boolean,
     }
   }
 </script>
