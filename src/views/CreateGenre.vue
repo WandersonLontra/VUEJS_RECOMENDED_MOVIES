@@ -82,7 +82,6 @@
                     this.snackbar = result.data.createGenres.genres[0].name === this.name;
 
                     this.genresList.push(capitalizedName)
-                    console.log(this.genresList)
 
                     if(this.snackbar) this.$refs.createGenreForm.reset();
 
