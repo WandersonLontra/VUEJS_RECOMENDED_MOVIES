@@ -67,6 +67,7 @@
         <DescriptionSession
           session_name="Actors"
           :descriptions="movies[0].actors"
+          isPerson
         />
 
         <v-divider />
@@ -74,6 +75,7 @@
         <DescriptionSession
           session_name="Directed by"
           :descriptions="movies[0].director"
+          isPerson
         />             
       </v-col>
     </v-row>
