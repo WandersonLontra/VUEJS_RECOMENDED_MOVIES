@@ -48,7 +48,7 @@
               block
               large
               elevation="4"
-              :disabled="this.genresSelected.length === 0"
+              :disabled="this.genresSelected === undefined"
               @click="sendGenres"  
             >
                 Send
@@ -68,11 +68,6 @@
             userName: String,
             isUpdating: Boolean,
             genresSelected: Array
-        },
-        data(){
-            return{
-                selected: []
-            }
         },
         apollo:{
             genres: require('../graphql/Genres.query.gql'),
