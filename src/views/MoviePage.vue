@@ -145,8 +145,6 @@ export default {
     },
     methods: {
       async changeMovieRate(value){
-        console.log(value)
-        
         const result = await this.$apollo.mutate({
           mutation: gql`
             mutation UpdateMovieRateUsers($where: UserWhere, $update: UserUpdateInput, $ratedConnectionWhere2: UserRatedConnectionWhere) {

@@ -33,6 +33,7 @@
     </v-row>
 
     <v-card
+      v-if="users[0].recommendedMovies.length > 0"
       class="mx-auto mt-9 pa-4"
       max-width="1024"
       rounded="lg"
@@ -53,18 +54,6 @@
         :movie_group="users[0].recommendedByGenres"
       />
     </v-card>
-
-    <v-card
-      class="mx-auto mt-9 pa-4"
-      max-width="1024"
-      rounded="lg"
-    >
-      <h1>Recommended Movies</h1>
-      <RecommendedMovies
-        :movie_group="[]"
-      />
-    </v-card>
-
   </v-container>
 </template>
 
